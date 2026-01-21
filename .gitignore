@@ -1,0 +1,49 @@
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform variable files (sensitive data)
+*.tfvars
+
+# Terraform plan files
+*.tfplan
+
+# Module cache
+.terraform/modules/
+
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+
+# Docker (if used in test)
+test-keycloak/data/
+
+# Temporary files
+*.bak
+*.old
