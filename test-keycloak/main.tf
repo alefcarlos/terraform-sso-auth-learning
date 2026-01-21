@@ -26,12 +26,18 @@ module "pix_api" {
   realm_id = keycloak_realm.acme.id
 }
 
+module "cartao_api" {
+  source   = "../modules/resource-server"
+  name     = "cartao-api"
+  realm_id = keycloak_realm.acme.id
+}
+
 module "pix_worker" {
   source = "../modules/service-account"
   name   = "pix-worker"
   permissions = {
     "pix-api" = ["reader"]
+    "cartao-api" = ["viewer"]
   }
   realm_id = keycloak_realm.acme.id
 }
-

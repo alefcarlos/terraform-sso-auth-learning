@@ -4,4 +4,4 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=client_credentials
 &client_id=sa-acme-pix-worker
 &client_secret=YVSRYeUp0GAyjE11e1KT9rkkyZ5vPZiJ
-&scope=acme-pix-api:reader
+&scope=acme-pix-api:reader acme-cartao-api:viewer
