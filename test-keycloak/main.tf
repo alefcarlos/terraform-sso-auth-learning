@@ -45,6 +45,7 @@ module "pix_worker" {
     }
     "env" = {
       value = "prod"
+      add_to_id_token = false
     }
   }
   int_hardcoded_claims = {
