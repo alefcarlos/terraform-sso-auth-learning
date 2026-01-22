@@ -52,7 +52,63 @@ resource "keycloak_openid_client_service_account_role" "assignments" {
 }
 
 resource "keycloak_openid_client_optional_scopes" "sa_scopes" {
-  realm_id  = var.realm_id
-  client_id = keycloak_openid_client.sa.id
+  realm_id        = var.realm_id
+  client_id       = keycloak_openid_client.sa.id
   optional_scopes = local.sa_optional_scopes
+}
+
+resource "keycloak_openid_hardcoded_claim_protocol_mapper" "string_hardcoded_claims" {
+  for_each = var.string_hardcoded_claims
+
+  realm_id            = var.realm_id
+  client_id           = keycloak_openid_client.sa.id
+  name                = "hardcoded-${each.key}"
+  claim_name          = each.key
+  claim_value         = each.value.value
+  claim_value_type    = each.value.claim_value_type
+  add_to_id_token     = each.value.add_to_id_token
+  add_to_access_token = each.value.add_to_access_token
+  add_to_userinfo     = each.value.add_to_userinfo
+}
+
+resource "keycloak_openid_hardcoded_claim_protocol_mapper" "int_hardcoded_claims" {
+  for_each = var.int_hardcoded_claims
+
+  realm_id            = var.realm_id
+  client_id           = keycloak_openid_client.sa.id
+  name                = "hardcoded-${each.key}"
+  claim_name          = each.key
+  claim_value         = each.value.value
+  claim_value_type    = each.value.claim_value_type
+  add_to_id_token     = each.value.add_to_id_token
+  add_to_access_token = each.value.add_to_access_token
+  add_to_userinfo     = each.value.add_to_userinfo
+}
+
+resource "keycloak_openid_hardcoded_claim_protocol_mapper" "long_hardcoded_claims" {
+  for_each = var.long_hardcoded_claims
+
+  realm_id            = var.realm_id
+  client_id           = keycloak_openid_client.sa.id
+  name                = "hardcoded-${each.key}"
+  claim_name          = each.key
+  claim_value         = each.value.value
+  claim_value_type    = each.value.claim_value_type
+  add_to_id_token     = each.value.add_to_id_token
+  add_to_access_token = each.value.add_to_access_token
+  add_to_userinfo     = each.value.add_to_userinfo
+}
+
+resource "keycloak_openid_hardcoded_claim_protocol_mapper" "boolean_hardcoded_claims" {
+  for_each = var.boolean_hardcoded_claims
+
+  realm_id            = var.realm_id
+  client_id           = keycloak_openid_client.sa.id
+  name                = "hardcoded-${each.key}"
+  claim_name          = each.key
+  claim_value         = each.value.value
+  claim_value_type    = each.value.claim_value_type
+  add_to_id_token     = each.value.add_to_id_token
+  add_to_access_token = each.value.add_to_access_token
+  add_to_userinfo     = each.value.add_to_userinfo
 }
