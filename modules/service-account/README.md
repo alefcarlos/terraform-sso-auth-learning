@@ -43,10 +43,9 @@ module "pix_worker_claims" {
   - `add_to_id_token` (optional): Whether to add to ID token (default: true).
   - `add_to_access_token` (optional): Whether to add to access token (default: true).
   - `add_to_userinfo` (optional): Whether to add to UserInfo response (default: true).
-  - `claim_value_type` (optional): Serialization type (default: "String"; options: String, JSON, long, int, boolean).
-- `int_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded int claims (similar structure, `value` is number, default `claim_value_type`: "int").
-- `long_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded long claims (similar structure, default `claim_value_type`: "long").
-- `boolean_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded boolean claims (similar structure, `value` is bool, default `claim_value_type`: "boolean").
+- `int_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded int claims (similar structure, `value` is number).
+- `long_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded long claims (similar structure, `value` is number).
+- `boolean_hardcoded_claims` (optional): Map of claim names to objects defining hardcoded boolean claims (similar structure, `value` is bool).
 
 ## Outputs
 

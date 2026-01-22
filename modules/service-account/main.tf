@@ -65,7 +65,7 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "string_hardcoded_cla
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
-  claim_value_type    = each.value.claim_value_type
+  claim_value_type    = "String"
   add_to_id_token     = each.value.add_to_id_token
   add_to_access_token = each.value.add_to_access_token
   add_to_userinfo     = each.value.add_to_userinfo
@@ -79,7 +79,7 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "int_hardcoded_claims
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
-  claim_value_type    = each.value.claim_value_type
+  claim_value_type    = "int"
   add_to_id_token     = each.value.add_to_id_token
   add_to_access_token = each.value.add_to_access_token
   add_to_userinfo     = each.value.add_to_userinfo
@@ -93,7 +93,7 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "long_hardcoded_claim
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
-  claim_value_type    = each.value.claim_value_type
+  claim_value_type    = "long"
   add_to_id_token     = each.value.add_to_id_token
   add_to_access_token = each.value.add_to_access_token
   add_to_userinfo     = each.value.add_to_userinfo
@@ -107,7 +107,7 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "boolean_hardcoded_cl
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
-  claim_value_type    = each.value.claim_value_type
+  claim_value_type    = "boolean"
   add_to_id_token     = each.value.add_to_id_token
   add_to_access_token = each.value.add_to_access_token
   add_to_userinfo     = each.value.add_to_userinfo

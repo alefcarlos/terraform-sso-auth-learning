@@ -32,18 +32,15 @@ variable "string_hardcoded_claims" {
     add_to_id_token     = optional(bool, true)
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
-    claim_value_type    = optional(string, "String")
   }))
   description = "Map of claim names to objects defining hardcoded string claims (e.g., {'app-role' = { value = 'worker', add_to_id_token = false }})."
   default     = {}
   validation {
-    condition = alltrue(flatten([
-      for name, config in var.string_hardcoded_claims : [
-        can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name)),
-        contains(["String", "JSON", "long", "int", "boolean"], config.claim_value_type)
-      ]
-    ]))
-    error_message = "Claim names must be kebab-case, and claim_value_type must be one of: String, JSON, long, int, boolean."
+    condition = alltrue([
+      for name, config in var.string_hardcoded_claims :
+      can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name))
+    ])
+    error_message = "Claim names must be kebab-case."
   }
 }
 
@@ -53,18 +50,15 @@ variable "int_hardcoded_claims" {
     add_to_id_token     = optional(bool, true)
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
-    claim_value_type    = optional(string, "int")
   }))
   description = "Map of claim names to objects defining hardcoded int claims."
   default     = {}
   validation {
-    condition = alltrue(flatten([
-      for name, config in var.int_hardcoded_claims : [
-        can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name)),
-        contains(["int"], config.claim_value_type)
-      ]
-    ]))
-    error_message = "Claim names must be kebab-case, and claim_value_type must be 'int'."
+    condition = alltrue([
+      for name, config in var.int_hardcoded_claims :
+      can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name))
+    ])
+    error_message = "Claim names must be kebab-case."
   }
 }
 
@@ -74,18 +68,15 @@ variable "long_hardcoded_claims" {
     add_to_id_token     = optional(bool, true)
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
-    claim_value_type    = optional(string, "long")
   }))
   description = "Map of claim names to objects defining hardcoded long claims."
   default     = {}
   validation {
-    condition = alltrue(flatten([
-      for name, config in var.long_hardcoded_claims : [
-        can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name)),
-        contains(["long"], config.claim_value_type)
-      ]
-    ]))
-    error_message = "Claim names must be kebab-case, and claim_value_type must be 'long'."
+    condition = alltrue([
+      for name, config in var.long_hardcoded_claims :
+      can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name))
+    ])
+    error_message = "Claim names must be kebab-case."
   }
 }
 
@@ -95,17 +86,14 @@ variable "boolean_hardcoded_claims" {
     add_to_id_token     = optional(bool, true)
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
-    claim_value_type    = optional(string, "boolean")
   }))
   description = "Map of claim names to objects defining hardcoded boolean claims."
   default     = {}
   validation {
-    condition = alltrue(flatten([
-      for name, config in var.boolean_hardcoded_claims : [
-        can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name)),
-        contains(["boolean"], config.claim_value_type)
-      ]
-    ]))
-    error_message = "Claim names must be kebab-case, and claim_value_type must be 'boolean'."
+    condition = alltrue([
+      for name, config in var.boolean_hardcoded_claims :
+      can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name))
+    ])
+    error_message = "Claim names must be kebab-case."
   }
 }
