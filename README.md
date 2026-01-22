@@ -63,17 +63,27 @@ module "pix_api" {
 
 ### Service Account Module
 
-Creates a confidential client and assigns roles from Resource Servers.
+Provisions a confidential OpenID Connect client for service accounts, enabling client_credentials authentication. Assigns permissions from resource servers and optionally includes hardcoded claims in tokens.
 
-#### Usage
+Supports claims of types: strings, integers, longs, booleans, with configurable inclusion in ID tokens, access tokens, and UserInfo responses.
+
+#### Example
+
 ```hcl
-module "pix_worker" {
+module "my_service_account" {
   source = "./modules/service-account"
-  name   = "pix-worker"
+
+  name        = "my-worker"
   permissions = {
-    "pix-api" = ["reader"]
+    "api-server" = ["read", "write"]
   }
-  realm_id = keycloak_realm.acme.id
+  string_hardcoded_claims = {
+    "env" = { value = "production" }
+  }
+  int_hardcoded_claims = {
+    "max-retries" = { value = 5, add_to_userinfo = false }
+  }
+  realm_id = keycloak_realm.example.id
 }
 ```
 
