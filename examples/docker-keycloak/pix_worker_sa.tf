@@ -1,5 +1,5 @@
 module "pix_worker" {
-  source = "../../modules/service-account"
+  source = "../../modules/confidential_client"
   name   = "pix-worker"
   permissions = {
     "pix-api"    = ["reader"]
@@ -10,7 +10,7 @@ module "pix_worker" {
       value = "worker"
     }
     "env" = {
-      value = "prod"
+      value           = "prod"
       add_to_id_token = false
     }
   }

@@ -1,15 +1,28 @@
 variable "name" {
   type        = string
-  description = "Name of the service account (kebab-case, e.g., 'pix-worker')."
+  description = "Name of the component (kebab-case, e.g., 'pix-api')."
   validation {
     condition     = can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", var.name))
-    error_message = "Name must be kebab-case (lowercase letters, numbers, and hyphens only; start with letter, no prefixes like 'sa-acme-')."
+    error_message = "Name must be kebab-case (lowercase letters, numbers, and hyphens only; start with letter, no prefixes like 'acme-')."
+  }
+}
+
+variable "roles" {
+  type        = list(string)
+  description = "Optional list of roles (kebab-case). If empty, no roles are defined."
+  default     = []
+  validation {
+    condition = alltrue([
+      for role in var.roles : can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*$", role))
+    ])
+    error_message = "Each role must be kebab-case (lowercase letters, numbers, and hyphens only; start with letter)."
   }
 }
 
 variable "permissions" {
   type        = map(list(string))
-  description = "Map of resource server names to list of roles (e.g., {'pix-api' = ['reader']})."
+  description = "Optional map of resource server names to list of roles (e.g., {'pix-api' = ['reader']}). If provided, enables service account."
+  default     = {}
   validation {
     condition = alltrue(flatten([
       for rs, roles in var.permissions : concat(
@@ -23,7 +36,7 @@ variable "permissions" {
 
 variable "realm_id" {
   type        = string
-  description = "ID of the Keycloak realm."
+  description = "ID of the Keycloak realm where resources will be created."
 }
 
 variable "string_hardcoded_claims" {
@@ -33,7 +46,7 @@ variable "string_hardcoded_claims" {
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
   }))
-  description = "Map of claim names to objects defining hardcoded string claims (e.g., {'app-role' = { value = 'worker', add_to_id_token = false }})."
+  description = "Map of claim names to objects defining hardcoded string claims (e.g., {'app-role' = { value = 'worker', add_to_id_token = false }}). Only used if permissions is provided."
   default     = {}
   validation {
     condition = alltrue([
@@ -51,7 +64,7 @@ variable "int_hardcoded_claims" {
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
   }))
-  description = "Map of claim names to objects defining hardcoded int claims."
+  description = "Map of claim names to objects defining hardcoded int claims. Only used if permissions is provided."
   default     = {}
   validation {
     condition = alltrue([
@@ -69,7 +82,7 @@ variable "long_hardcoded_claims" {
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
   }))
-  description = "Map of claim names to objects defining hardcoded long claims."
+  description = "Map of claim names to objects defining hardcoded long claims. Only used if permissions is provided."
   default     = {}
   validation {
     condition = alltrue([
@@ -87,7 +100,7 @@ variable "boolean_hardcoded_claims" {
     add_to_access_token = optional(bool, true)
     add_to_userinfo     = optional(bool, true)
   }))
-  description = "Map of claim names to objects defining hardcoded boolean claims."
+  description = "Map of claim names to objects defining hardcoded boolean claims. Only used if permissions is provided."
   default     = {}
   validation {
     condition = alltrue([

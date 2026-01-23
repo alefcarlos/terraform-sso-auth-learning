@@ -11,7 +11,7 @@ This file provides guidelines and commands for coding agents working on this Ter
 6. [Cursor and Copilot Rules](#cursor-and-copilot-rules)
 
 ## Project Overview
-This project implements Terraform modules for provisioning Keycloak authorization components: Resource Servers (bearer-only clients with roles and scopes) and Service Accounts (confidential clients for client_credentials auth). Modules are independent, reusable, and follow kebab-case naming conventions.
+This project implements Terraform modules for provisioning Keycloak authorization components. The main module is `confidential_client`, which creates a unified client that can define roles (resource server functionality) and/or request permissions from other clients (service account functionality). Modules are independent, reusable, and follow kebab-case naming conventions.
 
 ## Build and Deployment Commands
 Use these commands to initialize, validate, and deploy the infrastructure.
@@ -36,8 +36,8 @@ terraform apply
 
 ### Module-Specific Commands
 ```bash
-# For a specific module (e.g., resource-server)
-cd modules/resource-server
+# For a specific module (e.g., confidential_client)
+cd modules/confidential_client
 terraform init
 terraform validate
 terraform fmt
@@ -78,10 +78,10 @@ terraform fmt -check -recursive
 ### Single File Operations
 ```bash
 # Format a specific file
-terraform fmt modules/resource-server/main.tf
+terraform fmt modules/confidential_client/main.tf
 
 # Validate a specific file
-terraform validate -json modules/resource-server/ | jq
+terraform validate -json modules/confidential_client/ | jq
 ```
 
 ## Testing
@@ -100,10 +100,10 @@ cd test-keycloak && terraform plan && terraform apply
 To test a specific module or configuration:
 ```bash
 # Validate a single module
-cd modules/resource-server && terraform validate
+cd modules/confidential_client && terraform validate
 
 # Test plan for a specific config
-cd examples/resource-server && terraform plan
+cd examples/docker-keycloak && terraform plan
 
 # Integration test: Plan and apply in test env
 cd test-keycloak && terraform plan -out=tfplan && terraform apply tfplan
@@ -122,7 +122,7 @@ For unit-like tests, use `terraform plan` with mock data or validate syntax.
 ### Naming Conventions
 - **Variables**: kebab-case (e.g., `realm_id`, `client_secret`).
 - **Resources**: snake_case with meaningful prefixes (e.g., `keycloak_openid_client.rs`).
-- **Modules**: kebab-case (e.g., `resource-server`, `service-account`).
+- **Modules**: kebab-case (e.g., `confidential_client`).
 - **Outputs**: snake_case (e.g., `client_id`).
 - **Locals**: snake_case (e.g., `role_assignments`).
 - **Files**: snake_case.tf (e.g., `main.tf`, `variables.tf`).
@@ -159,7 +159,7 @@ For unit-like tests, use `terraform plan` with mock data or validate syntax.
 - For maps/lists, specify element types: `type = map(list(string))`.
 
 ### Imports and Modules
-- Use relative paths for local modules: `source = "../modules/resource-server"`.
+- Use relative paths for local modules: `source = "../modules/confidential_client"`.
 - Avoid hardcoded paths; use variables for dynamic sources if needed.
 - Import only necessary providers; specify versions exactly (e.g., `version = "5.6.0"`).
 - Group providers in `providers.tf`.

@@ -1,4 +1,5 @@
 locals {
+  roles = length(var.roles) > 0 ? var.roles : []
   role_assignments = flatten([
     for rs, roles in var.permissions : [
       for role in roles : {
@@ -7,30 +8,48 @@ locals {
       }
     ]
   ])
-
   sa_optional_scopes = distinct([
     for item in local.role_assignments :
     "acme-${item.rs}:${item.role}"
   ])
+  has_permissions = length(var.permissions) > 0
+  has_roles       = length(var.roles) > 0
 }
 
-resource "keycloak_openid_client" "sa" {
+resource "keycloak_openid_client" "client" {
   realm_id                 = var.realm_id
-  client_id                = "sa-acme-${var.name}"
-  access_type              = "CONFIDENTIAL"
-  service_accounts_enabled = true
+  client_id                = "acme-${var.name}"
+  access_type              = local.has_permissions ? "CONFIDENTIAL" : "BEARER-ONLY"
+  service_accounts_enabled = local.has_permissions
   enabled                  = true
   full_scope_allowed       = false
+}
 
-  # Disable flows not needed for service accounts
-  standard_flow_enabled        = false
-  implicit_flow_enabled        = false
-  direct_access_grants_enabled = false
+resource "keycloak_role" "roles" {
+  for_each    = toset(local.roles)
+  realm_id    = var.realm_id
+  client_id   = keycloak_openid_client.client.id
+  name        = "acme-${var.name}:${each.value}"
+  description = "Role for ${each.value} access to ${var.name}"
+}
+
+resource "keycloak_openid_client_scope" "scopes" {
+  for_each = keycloak_role.roles
+  realm_id = var.realm_id
+  name     = each.value.name
+}
+
+resource "keycloak_generic_role_mapper" "mappers" {
+  for_each        = keycloak_role.roles
+  realm_id        = var.realm_id
+  client_scope_id = keycloak_openid_client_scope.scopes[each.key].id
+  role_id         = each.value.id
 }
 
 data "keycloak_openid_client_service_account_user" "sa_user" {
+  count     = local.has_permissions ? 1 : 0
   realm_id  = var.realm_id
-  client_id = keycloak_openid_client.sa.id
+  client_id = keycloak_openid_client.client.id
 }
 
 data "keycloak_openid_client" "resource_servers" {
@@ -46,22 +65,23 @@ resource "keycloak_openid_client_service_account_role" "assignments" {
   }
 
   realm_id                = var.realm_id
-  service_account_user_id = data.keycloak_openid_client_service_account_user.sa_user.id
+  service_account_user_id = data.keycloak_openid_client_service_account_user.sa_user[0].id
   client_id               = data.keycloak_openid_client.resource_servers[each.value.rs].id
   role                    = "acme-${each.value.rs}:${each.value.role}"
 }
 
 resource "keycloak_openid_client_optional_scopes" "sa_scopes" {
+  count           = local.has_permissions ? 1 : 0
   realm_id        = var.realm_id
-  client_id       = keycloak_openid_client.sa.id
+  client_id       = keycloak_openid_client.client.id
   optional_scopes = local.sa_optional_scopes
 }
 
 resource "keycloak_openid_hardcoded_claim_protocol_mapper" "string_hardcoded_claims" {
-  for_each = var.string_hardcoded_claims
+  for_each = local.has_permissions ? var.string_hardcoded_claims : {}
 
   realm_id            = var.realm_id
-  client_id           = keycloak_openid_client.sa.id
+  client_id           = keycloak_openid_client.client.id
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
@@ -72,10 +92,10 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "string_hardcoded_cla
 }
 
 resource "keycloak_openid_hardcoded_claim_protocol_mapper" "int_hardcoded_claims" {
-  for_each = var.int_hardcoded_claims
+  for_each = local.has_permissions ? var.int_hardcoded_claims : {}
 
   realm_id            = var.realm_id
-  client_id           = keycloak_openid_client.sa.id
+  client_id           = keycloak_openid_client.client.id
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
@@ -86,10 +106,10 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "int_hardcoded_claims
 }
 
 resource "keycloak_openid_hardcoded_claim_protocol_mapper" "long_hardcoded_claims" {
-  for_each = var.long_hardcoded_claims
+  for_each = local.has_permissions ? var.long_hardcoded_claims : {}
 
   realm_id            = var.realm_id
-  client_id           = keycloak_openid_client.sa.id
+  client_id           = keycloak_openid_client.client.id
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
@@ -100,10 +120,10 @@ resource "keycloak_openid_hardcoded_claim_protocol_mapper" "long_hardcoded_claim
 }
 
 resource "keycloak_openid_hardcoded_claim_protocol_mapper" "boolean_hardcoded_claims" {
-  for_each = var.boolean_hardcoded_claims
+  for_each = local.has_permissions ? var.boolean_hardcoded_claims : {}
 
   realm_id            = var.realm_id
-  client_id           = keycloak_openid_client.sa.id
+  client_id           = keycloak_openid_client.client.id
   name                = "hardcoded-${each.key}"
   claim_name          = each.key
   claim_value         = each.value.value
