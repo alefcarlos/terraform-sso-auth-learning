@@ -1,9 +1,13 @@
 variable "name" {
   type        = string
-  description = "Name of the component (kebab-case, ending with '-api', '-worker', '-ios', or '-android', e.g., 'pix-api')."
+  description = "Name of the component (kebab-case, ending with '-api', '-worker', '-ios', or '-android', not starting with 'acme-', e.g., 'pix-api')."
   validation {
     condition     = can(regex("^[a-z][a-z0-9]*(-[a-z0-9]+)*-(api|worker|ios|android)$", var.name))
     error_message = "Name must be kebab-case ending with '-api', '-worker', '-ios', or '-android' (e.g., 'pix-api')."
+  }
+  validation {
+    condition     = !startswith(var.name, "acme-")
+    error_message = "Name must not start with 'acme-'."
   }
 }
 

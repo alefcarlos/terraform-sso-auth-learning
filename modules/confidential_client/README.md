@@ -45,7 +45,7 @@ module "mobile-ios" {
 
 ## Inputs
 
-- `name` (required): Kebab-case component name ending with '-api', '-worker', '-ios', or '-android' (e.g., "pix-api").
+- `name` (required): Kebab-case component name ending with '-api', '-worker', '-ios', or '-android', not starting with 'acme-' (e.g., "pix-api").
 - `roles` (optional): List of roles to define; if empty, no roles are created.
 - `permissions` (optional): Map of component names to roles to request; if provided, enables service account.
 - `realm_id` (required): Realm ID.

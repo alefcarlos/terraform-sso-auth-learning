@@ -123,7 +123,7 @@ For unit-like tests, use `terraform plan` with mock data or validate syntax.
 - **Variables**: kebab-case (e.g., `realm_id`, `client_secret`).
 - **Resources**: snake_case with meaningful prefixes (e.g., `keycloak_openid_client.rs`).
 - **Modules**: kebab-case (e.g., `confidential_client`).
-- **Component Names**: kebab-case ending with '-api', '-worker', '-ios', or '-android' (e.g., 'pix-api', 'cartao-worker').
+- **Component Names**: kebab-case ending with '-api', '-worker', '-ios', or '-android', not starting with 'acme-' (e.g., 'pix-api', 'cartao-worker').
 - **Outputs**: snake_case (e.g., `client_id`).
 - **Locals**: snake_case (e.g., `role_assignments`).
 - **Files**: snake_case.tf (e.g., `main.tf`, `variables.tf`).

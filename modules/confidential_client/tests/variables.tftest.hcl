@@ -73,6 +73,22 @@ run "valid_confidential_client_full" {
 # ❌ FAILURE CASES
 #################################
 
+# Invalid component name strating with acme-
+run "invalid_name_format_starting_with_acme" {
+  command = plan
+
+  variables {
+    name      = "acme-pix-Worker"
+    realm_id = "test"
+
+    roles = ["reader"]
+  }
+
+  expect_failures = [
+    var.name
+  ]
+}
+
 # Invalid component name
 run "invalid_name_format" {
   command = plan
