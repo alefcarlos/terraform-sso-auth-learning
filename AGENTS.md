@@ -11,7 +11,7 @@ This file provides guidelines and commands for coding agents working on this Ter
 6. [Cursor and Copilot Rules](#cursor-and-copilot-rules)
 
 ## Project Overview
-This project implements Terraform modules for provisioning Keycloak authorization components. The main module is `confidential_client`, which creates a unified client that can define roles (resource server functionality) and/or request permissions from other clients (service account functionality). Modules are independent, reusable, and follow kebab-case naming conventions.
+This project implements Terraform modules for provisioning Keycloak authorization components. The main module is `confidential_client`, which creates a unified client that can define roles (resource server functionality) and/or request permissions from other clients (service account functionality). Component names must be kebab-case and end with '-api', '-worker', '-ios', or '-android'. Modules are independent, reusable, and follow kebab-case naming conventions.
 
 ## Build and Deployment Commands
 Use these commands to initialize, validate, and deploy the infrastructure.
@@ -123,6 +123,7 @@ For unit-like tests, use `terraform plan` with mock data or validate syntax.
 - **Variables**: kebab-case (e.g., `realm_id`, `client_secret`).
 - **Resources**: snake_case with meaningful prefixes (e.g., `keycloak_openid_client.rs`).
 - **Modules**: kebab-case (e.g., `confidential_client`).
+- **Component Names**: kebab-case ending with '-api', '-worker', '-ios', or '-android' (e.g., 'pix-api', 'cartao-worker').
 - **Outputs**: snake_case (e.g., `client_id`).
 - **Locals**: snake_case (e.g., `role_assignments`).
 - **Files**: snake_case.tf (e.g., `main.tf`, `variables.tf`).

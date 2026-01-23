@@ -32,12 +32,12 @@ module "pix_worker" {
 
 ### As Both (defines roles and requests permissions)
 ```hcl
-module "component" {
+module "mobile-ios" {
   source = "./modules/confidential_client"
-  name   = "component"
+  name   = "mobile-ios"
   roles  = ["viewer"]
   permissions = {
-    "other" = ["access"]
+    "api" = ["access"]
   }
   realm_id = var.realm_id
 }
@@ -45,7 +45,7 @@ module "component" {
 
 ## Inputs
 
-- `name` (required): Kebab-case component name (e.g., "pix-api").
+- `name` (required): Kebab-case component name ending with '-api', '-worker', '-ios', or '-android' (e.g., "pix-api").
 - `roles` (optional): List of roles to define; if empty, no roles are created.
 - `permissions` (optional): Map of component names to roles to request; if provided, enables service account.
 - `realm_id` (required): Realm ID.
